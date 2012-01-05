@@ -1,0 +1,42 @@
+name = Drupal Wiki
+description = Install with Drupal pre-configured for a wiki.
+core = 7.x
+distribution_name = Drupal Wiki
+
+dependencies[] = block
+dependencies[] = color
+dependencies[] = comment
+dependencies[] = contextual
+dependencies[] = dashboard
+dependencies[] = help
+dependencies[] = image
+dependencies[] = list
+dependencies[] = menu
+dependencies[] = number
+dependencies[] = options
+dependencies[] = path
+dependencies[] = taxonomy
+dependencies[] = dblog
+dependencies[] = search
+dependencies[] = shortcut
+dependencies[] = toolbar
+dependencies[] = overlay
+dependencies[] = field_ui
+dependencies[] = file
+dependencies[] = rdf
+
+; Developers can feel free to invert the comments below to install modules that
+; aid in module development.
+dependencies[] = admin_menu
+dependencies[] = diff
+
+dependencies[] = extlink
+dependencies[] = pathauto
+dependencies[] = token
+dependencies[] = freelinking
+dependencies[] = flexifilter
+dependencies[] = talk
+dependencies[] = wikitools
+
+
+files[] = drupal_wiki.profile

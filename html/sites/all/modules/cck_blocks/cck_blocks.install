@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function cck_blocks_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'cck_blocks%'");
+
+}

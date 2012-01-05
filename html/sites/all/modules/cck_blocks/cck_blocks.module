@@ -1,0 +1,157 @@
+<?php
+
+define('CCK_BLOCKS_FIELD_BLOCK_DISABLED', 1);
+define('CCK_BLOCKS_FIELD_BLOCK_ENABLED', 2);
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function cck_blocks_entity_info_alter(&$entity_info) {
+  // Add the 'CCK Blocks' view mode for nodes.
+  $entity_info['node']['view modes'] += array(
+    'cck_blocks' => array(
+      'label' => t('CCK Blocks'),
+      'custom settings' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function cck_blocks_block_info(){
+  $blocks = array();
+  $fields = field_info_fields();
+  foreach($fields as $field_name => $field_info) {
+    if (variable_get('cck_blocks_' . $field_name . '_block_availability', CCK_BLOCKS_FIELD_BLOCK_DISABLED) == CCK_BLOCKS_FIELD_BLOCK_ENABLED) {
+      $blocks[$field_name] = array(
+        'info' => t('Field: @field ', array('@field' => $field_name)),
+        'cache' => DRUPAL_NO_CACHE,
+      );
+    }
+  }
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function cck_blocks_block_configure(){
+  $form = array();
+  
+  // Provide information about available tokens, if the token ui module is installed.
+  if(module_exists('token')){
+    $token_tree = array(
+      '#theme' => 'token_tree',
+      '#token_types' => array('node'), // Specific token types to include.
+      '#global_types' => TRUE, // Whether or not to include global token types like current-user, date, etc.
+      '#click_insert' => TRUE, // Make tokens clickable & insert into last focused textfield
+      '#recursion_limit' => 2, // Since tokens like comment and taxonomy terms can recurse infinitely, we have to set some kind of limit.
+    );
+    $form['view']['token_help'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Replacement patterns'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#description' => t('You may use the following replacement patterns in the block title.') . theme('token_tree', $token_tree),
+    );
+  }
+  
+  return $form;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function cck_blocks_block_view($delta = '') {
+  static $built_nodes = NULL;
+  $field = field_info_field($delta);
+  $block = array();
+
+  // Get the currently viewed node.
+  $node = menu_get_object();
+  /* Determine whether the node's content is being displayed to the user.
+   * It is, when any revision is displayed, inlcuding the latest one.
+   * For example, the node's content is not visible to the user when he is
+   * selecting revisions for comparison or when he is editing the node.
+   */
+  $display_nodecontent = (!arg(2) || arg(2) == 'revisions' && is_numeric(arg(3)));
+
+  /* Only create a block, when a node is loaded, the node's content is displayed
+   * to the user and the requested field is available in the fields array
+   */
+  if (isset($node->nid) && $display_nodecontent && $field) {
+    $nid = $node->nid;
+
+    // build the node in cck_blocks mode if that hasn't been done yet
+    if (!isset($built_nodes[$nid])) {
+      field_attach_prepare_view('node', array($node->nid => $node), 'cck_blocks');
+      entity_prepare_view('node', array($node->nid => $node));
+      $built_nodes[$nid] = field_attach_view('node', $node, 'cck_blocks', $node->language);
+    }
+
+    // look directly for the cck_field in the content array
+    $field_data = FALSE;
+    if (isset($built_nodes[$nid][$delta])) {
+      $field_data = $built_nodes[$nid][$delta];
+    }
+
+    if ($field_data) {
+      $block_content = drupal_render($field_data);
+      if (trim($block_content) != '') {
+        // Evaluate tokens in a user-defined title, if token module is installed
+        global $user;
+        $data = array(
+          'node' => $node,
+          'user' => $user,
+        );
+        $title = db_query("SELECT title FROM {block} WHERE delta = :delta", array(':delta' => $delta))->fetchField();
+        if ($title){
+          $block['title'] = token_replace($title, $data);
+        }
+  
+        /* Use the label of the field as the block's title. Only visible,
+         * if the user did not enter a custom title for the block as $block->subject
+         * is replaced by $block->title (if set) in block_list().
+         */
+        $block['subject'] = t($field_data['#title']);
+  
+        // Set the field's data as the content of the block
+        $block['content'] = $block_content;
+      }
+    }
+  }
+  return $block;
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds options to the field configuration page for making the field available as a
+ * block for this specific content type or for every content type that uses it.
+ */
+function cck_blocks_form_field_ui_field_edit_form_alter(&$form, $form_state) {
+  // Global settings form
+  $form['field']['global_block_settings'] = array(
+    '#type' => 'radios',
+    '#title' => t('Provide block for this field'),
+    '#default_value' => variable_get('cck_blocks_' . $form['#field']['field_name'] . '_block_availability', CCK_BLOCKS_FIELD_BLOCK_DISABLED),
+    '#description' => t('When enabled, this field becomes available as a block in the block admin page. Overridden by content-type-specific settings'),
+    '#options' => array(
+      CCK_BLOCKS_FIELD_BLOCK_DISABLED => t('Disabled'),
+      CCK_BLOCKS_FIELD_BLOCK_ENABLED => t('Enabled'),
+    ),
+  );
+  // Add custom form handler to the submit function
+  $form['#submit'][] = 'cck_blocks_field_settings_submit';
+}
+
+function cck_blocks_field_settings_submit($form, &$form_state) {
+  if ($form_state['values']['field']['global_block_settings'] == CCK_BLOCKS_FIELD_BLOCK_ENABLED) {
+    variable_set('cck_blocks_' . $form['#field']['field_name'] . '_block_availability', CCK_BLOCKS_FIELD_BLOCK_ENABLED);
+  }
+  else {
+    variable_del('cck_blocks_' . $form['#field']['field_name'] . '_block_availability');
+  }
+}

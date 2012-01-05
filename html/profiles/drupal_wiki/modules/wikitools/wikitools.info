@@ -1,0 +1,13 @@
+name = Wikitools
+description = Provides helper functionality to have wiki-like behaviour.
+core = 7.x
+files[] = wikitools.admin.inc
+files[] = wikitools.module
+files[] = wikitools.pages.inc
+configure = admin/config/wikitools
+; Information added by drupal.org packaging script on 2011-03-11
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "wikitools"
+datestamp = "1299881469"
+

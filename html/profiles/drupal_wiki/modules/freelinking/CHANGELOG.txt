@@ -1,0 +1,21 @@
+# CHANGELOG.txt for freelinking.module for Drupal 6, version 3.x.
+
+## freelinking-6.x-3.0-alpha3
+  * #564294: Add link text other than nodetitle with |. Simple syntax (wiki style) to define the link text.
+  * #557740: Allow character formatting in the linking phrase. Defaults to allow HTML in link text.
+  * #448396: FL3 isn't visible? Added Freelinking Administration permission.
+  * #565056: NID/Nodetitle Syntax Collision
+  * #612434: Freelinking 3 Plugins via Hooks. hook_freelinking()
+  * #565046: Metatag Description for Better Tooltips. Use of Nodewords for better internal tooltips.
+  * #577626: drupalnid plugin using drupal_http_request
+  * New Plugins: Search, Google, Createnode
+  * #621180: Building a Robust FL3 API. New API Functions: hook_freelinking(), hook_freelink_alter()
+  * #621586: Theming support. Theme Functions: theme_freelink, theme_freelink_error
+  * Support for alternate syntaxes: Double Bracket, Single Bracket, Markdown-style
+  * Optional Integration with Vertical Tabs for enhanced Freelinking settings page.
+
+## freelinking-6.x-3.0-alpha2
+* Followup Changes
+
+## freelinking-6.x-3.0-alpha1
+* Initial commit of the freelinking 3 series.
