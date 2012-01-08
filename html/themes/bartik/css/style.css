@@ -1,3 +1,22 @@
+/* HACKS */
+
+#breadcrumb {
+display: none !important;
+}
+
+#triptych-wrapper .views-field-field-image {float: left;}
+#triptych-wrapper .views-row {margin: 0 0 20px;}
+body.page-taxonomy-term .field-name-field-image {float: right;}
+body.page-taxonomy-term #block-system-main {display: none;}
+body.page-taxonomy-term .feed-icon {display: none;}
+body.page-taxonomy-term #block-views-tool-wiki-block {float: left; width: 420px;}
+body.page-taxonomy-term #block-views-tool-image-block {float: right; margin-top: 100px;}
+body.page-taxonomy-term #block-views-tool-profile-block {float: right; display: none;}
+body.page-taxonomy-term .feed-icon {display: none;}
+
+.view-id-clone_of_recent_comments {color: #444;}
+body #page .region-header { margin-top: 0em; !important}
+
 
 /* ---------- Overall Specifications ---------- */
 
