@@ -182,7 +182,7 @@ $databases = array (
   array (
     'default' => 
     array (
-      'database' => 'farmhack_alpha2',
+      'database' => 'sandbox',
       'username' => 'root',
       'password' => 'password',
       'host' => 'localhost',
