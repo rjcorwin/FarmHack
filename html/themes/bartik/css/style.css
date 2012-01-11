@@ -1,63 +1,9 @@
-/* HACKS */
 
-#breadcrumb {
-display: none !important;
-}
-
-#triptych-wrapper .views-field-field-image {float: left;}
-#triptych-wrapper .views-row {margin: 0 0 20px;}
-body.page-taxonomy-term .field-name-field-image {float: right;}
-body.page-taxonomy-term .tabs {position: relative; top: -44px}
+/*
+ * Mess with Taxonomy pages. Quite aggressive.  
+ */ 
 body.page-taxonomy-term #block-system-main {display: none;}
-body.page-taxonomy-term .feed-icon {display: none;}
-body.page-taxonomy-term #block-views-tool-wiki-block {float: left; width: 420px;}
-body.page-taxonomy-term #block-views-tool-image-block {float: right; margin-top: 0px;}
-body.page-taxonomy-term #block-views-tool-profile-block {float: right; display: none;}
-body.page-taxonomy-term .feed-icon {display: none;}
 
-.view-id-clone_of_recent_comments {color: #444;}
-body #page .region-header { margin-top: 0em; !important}
-
-body.page-taxonomy-term #page-title {
-background: #333;
-color: white;
-position: relative;
-left: -400px;
-width: 1820px;
-padding: 50px 0px 50px 400px;
-font-size: 40px;
-bottom: 40px;
-}
-
-body.page-taxonomy-term #main-menu-links li a.active { background: #333; color: #FFF; }
-
-#block-boxes-tools-wiki-title {
-position: relative;
-
-}
-
-#block-boxes-tools-wiki-title h2 {
-position: relative;
-top: -25px;
-background: #292929;
-color: #FFF !important;
-width: 255px;
-height: 55px;
-left: -400px;
-padding: 28px 0px 0px 400px;
-}
-
-
-#block-boxes-tools-forum-title h2 {
-position: absolute;
-top: -85px;
-background: #292929;
-color: #FFF !important;
-width: 305px;
-height: 55px;
-left: -400px;
-padding: 28px 0px 0px 346px;
-}
 
 /* ---------- Overall Specifications ---------- */
 

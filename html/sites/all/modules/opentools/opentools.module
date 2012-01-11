@@ -1,0 +1,79 @@
+<?php
+
+/*
+ * Get the context's Forum term.
+ */
+
+function opentools_init() {
+ // drupal_add_css(drupal_get_path('module', 'opentools') . '/css/opentools.css', array('group' => CSS_DEFAULT, 'every_page' => TRUE));
+  if(arg(0) != 'admin' && arg(2) != 'edit') {
+    drupal_add_css(drupal_get_path('module', 'opentools') . '/css/opentools.css');
+  }
+  
+}
+
+
+function opentools_get_forum_context($context = NULL) {
+
+  if(!$context && arg(0) == 'forum') {
+    return arg(1);
+  }
+  elseif (!$context) {
+    $context = menu_get_object('taxonomy_term', 2); 
+  }
+
+  // If $context is a taxonomy term
+  if (property_exists($context, "vocabulary_machine_name")) {
+    switch ($context->vocabulary_machine_name) {
+      case "events" :
+        $parent = $context->field_events_to_forum['und'][0]['tid'];
+        break;
+      case "tools" :
+        $parent = $context->field_tool_to_forum['und'][0]['tid'];
+        break;
+      case "forums" :
+        $parent = $context->tid;
+        break;
+    }
+  }
+  // If $context is a node
+  elseif(property_exists($context, "type")) {
+    switch ($context->type) {
+      case "wiki" :
+        // Find the Event or Tool that relates to this wiki page
+        $wiki_parent = opentools_get_wiki_parent();
+        $parent = opentools_get_forum_context($wiki_parent);
+        break;
+      case "forum_topic" :
+        $parent = $context->taxonomy_forums['und'][0]['tid'];
+        break;
+    }
+  }
+  
+  return $parent;
+}
+
+function opentools_get_wiki_parent($node) {
+  $sql = "select from taxonomy_term as parent 
+    innerjoin field_events_to_wiki on field_events_to_wiki.tid = parent.tid 
+    innerjoin field_tools_to_wiki on field_tools_to_wiki.tid = parent.tid
+    where field_events_to_wiki.value =" . $node->nid . " 
+      OR field_tools_to_wiki.value=" . $node->nid;
+} 
+
+
+function opentools_get_forum_context_ancestry($context = NULL) {
+ 
+  // Get parent's ancestry
+  if (is_numeric($context)) {
+    $parents = taxonomy_get_parents($context);
+    foreach ($parents as $parent) {
+      $ancestry[] = $parent->tid;
+    }
+  } 
+  else {
+    $ancestry = NULL;
+  }
+
+  return $ancestry;
+}

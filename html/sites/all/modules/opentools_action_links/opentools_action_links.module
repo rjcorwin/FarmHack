@@ -1,0 +1,11 @@
+<?php
+
+function opentools_action_links_menu_alter() {
+print 'yart';
+kpr($items);
+kpr('ya');
+
+
+}
+
+

@@ -1,0 +1,139 @@
+#block-views-forum-topic-type-actions-block .view-content {
+  position: absolute;
+  width: 1068px;
+left: -50px;
+bottom: -5px;
+}
+
+#block-views-forum-topic-type-actions-block .views-row {
+  float: left;
+  width:166px;
+}
+#block-views-41f811dfbd6ec4751785bc1d370afaf6 {
+  margin-top: 66px;
+}
+
+/* HACKS */
+
+#breadcrumb {
+display: none !important;
+}
+
+body #page .region-header { margin-top: 0em !important;}
+
+/*
+ * The ticker
+ */
+.view-id-clone_of_recent_comments {color: #444;}
+
+/*
+ * Styling the triptych regions for Forum listings
+ */ 
+#triptych-wrapper .views-field-field-image {float: left;}
+#triptych-wrapper .views-row {margin: 0 0 20px;}
+
+/*
+ * Mess with Taxonomy pages. Quite aggressive.  
+ 
+body.page-taxonomy-term #block-system-main {display: none;}
+*/
+body.page-taxonomy-term .field-name-field-image {float: right;}
+body.page-taxonomy-term .feed-icon {display: none;}
+
+/*
+ * Blocks on Tool pages
+ */
+body.page-taxonomy-term #block-views-tool-wiki-block {float: left; width: 420px;}
+body.page-taxonomy-term #block-views-tool-image-block {float: right; margin-top: 0px;}
+body.page-taxonomy-term #block-views-tool-profile-block {float: right; display: none;}
+
+/*
+ * Blocks on Events pages
+ */
+#block-views-event-fields-block-2 {
+font-size: 25px !important;
+margin: 0px 0px 140px 0px;
+}
+
+#block-views-event-fields-block-2 .views-field-field-datetime {
+width: 350px;
+}
+
+#block-views-event-fields-block-2 .views-field-field-text-location {
+width: 350px;
+}
+
+#block-views-event-fields-block-2 .views-field-field-image {
+position: relative;
+bottom: 70px;
+float: right;
+padding: 7px 7px 1px 7px;
+margin: 0px 0px 11px 11px;
+background: #DDD;
+border: solid #292929 1px;
+}
+
+#block-views-event-wiki-block {
+margin-bottom: 40px;
+}
+
+/* 
+ * Badass Titles 
+ */
+body.page-taxonomy-term #page-title {
+background: #333;
+color: white;
+position: relative;
+left: -400px;
+width: 1820px;
+padding: 50px 0px 50px 400px;
+font-size: 40px;
+bottom: 40px;
+}
+body.page-taxonomy-term #main-menu-links li a.active { background: #333; color: #FFF; }
+body.page-taxonomy-term .tabs {position: relative; top: -44px}
+/* don't mess with the wiki tabs */
+body.page-taxonomy-term .region-content .tabs {position: relative; top: 0px}
+
+/* 
+ * Block Title Strips 
+ */
+#block-boxes-tools-wiki-title {
+position: relative;
+}
+
+.region-content .block h2 {
+position: relative;
+top: -25px;
+background: #292929;
+color: #FFF !important;
+width: 255px;
+left: -400px;
+padding: 15px 0px 15px 400px;
+font-size: 40px !important;
+line-height: 1em !important;
+}
+
+
+#block-boxes-tools-forum-title h2, #block-boxes-events-forum-title h2 {
+position: absolute;
+top: -85px;
+background: #292929;
+color: #FFF !important;
+width: 305px;
+height: 55px;
+left: -400px;
+padding: 28px 0px 0px 346px;
+}
+
+/*
+ * The forum
+ */
+ body.page-forum- ul.action-links { display: none;}
+ 
+body.page-forum- #block-views-forum-topic-type-actions-block .view-content {
+  position: relative;
+  width: 1068px;
+left: 0px;
+bottom: -0px;
+}

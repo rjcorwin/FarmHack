@@ -1,0 +1,7 @@
+name = Open Tools
+core = 7.x
+php = 5.2
+
+; Always available CSS
+stylesheets[all][] = css/opentools.css
+
