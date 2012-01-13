@@ -1,0 +1,18 @@
+
+
+# Installation
+
+For Alpha and Beta releases we are keeping the database (db.sql) and the files directory (html/sites/default/files/) in the repository.  Just clone this repository, create a database for it, run db.sql on that database, and then modify /html/sites/default/settings.php to point to that database.  
+
+# The future
+
+We'll run out of space on GitHub if we keep the databse and 'files' directory in the repo after our 1.0 release.  When we hit 1.0, the files directory and db.sql can be hosted elsewhere with a pointer in the repo to those resources.  Maybe somewhere down the line we'll get funding to do a proper install profile so we don't need a seperate db.sql and files directory.  This would help us share code with others who want to run their own Tools based site but are going to have a different set of content than FarmHack.  
+
+
+# Credits
+
+I (rjstatic) have handle architecture, assembly, and development so far.
+
+The project started out using a Make file from the Drupal Wiki project http://drupal.org/project/drupal_wiki
+
+There are a couple of icons from http://thenounproject.com/.  Credit is given on the Taxonomy terms where the images live as icons.
