@@ -1,18 +1,64 @@
+# About
 
+Bringing the open source revolution to farming with a "Social Tool Building" platform.  
+
+Open Source in itself is not revolutionary or new. We have always been "building on the shoulders of giants". Yet, the Internet is a booster shot for Open Source as it increases the velocity of information, yet, we are just starting to discover how to use the Internet effectively.  
+
+Internet + Open source != Revolution
+
+Internet + Open Source + Collaboration = Revolution
+
+There is a difference between available and accessible. Just because something is available does not mean it is accessible, ie. easy to implement, build off of, share.  Just like democracy needs people to collaborate on reaching consensus to make something greater than ourselves, development of tools requires collaboration to reach consensus that makes something greater than just a tool.
+
+# Architecture
+
+## Tools
+
+Each Tool has it's own Forum (like an Issue Queue) and Wiki page (like a code branch).  In the Tool Forum, users can create Forum Topics labeled as How To Build, How To Use, Question, Idea or new information, and Feedback or Field Trial.   
+These topic types compare to concepts already in use:  
+
+How To Build - Like a patch for the code, it's a pull request for the Wiki page. 
+How To Use - Like a patch for the code, it's a pull request for the Wiki page.
+Question - Similar to support request. 
+Idea or new information - Similar to a feature request.
+Feedback or Field Trial - Similar to a bug report or Test Pass/Fail.
+
+Tools are terms in the Tools Vocabulary, Forums are terms in the Forum Vocabulary, Forum Topic is Node type, and Wiki is a Node type.
+
+## Events
+
+Docs coming... Very similar to the Tools (Events have a designated Forum and Wiki page) except Event entities have different kinds of metadata.     
 
 # Installation
 
 For Alpha and Beta releases we are keeping the database (db.sql) and the files directory (html/sites/default/files/) in the repository.  Just clone this repository, create a database for it, run db.sql on that database, and then modify /html/sites/default/settings.php to point to that database.  
 
+We'll run out of space on GitHub if we keep the databse and 'files' directory in the repo after our 1.0 release.  When we hit 1.0, the files directory and db.sql can be hosted elsewhere with a pointer in the repo to those resources.  Maybe somewhere down the line we'll get funding to do a proper install profile so we don't need a seperate db.sql and files directory.  This would help us share code with others who want to run their own Tools based site but are going to have a different set of content than FarmHack.  
+
 # The future
 
-We'll run out of space on GitHub if we keep the databse and 'files' directory in the repo after our 1.0 release.  When we hit 1.0, the files directory and db.sql can be hosted elsewhere with a pointer in the repo to those resources.  Maybe somewhere down the line we'll get funding to do a proper install profile so we don't need a seperate db.sql and files directory.  This would help us share code with others who want to run their own Tools based site but are going to have a different set of content than FarmHack.  
+I believe GitHub's "Social Coding" is an example of collaboration on the Internet done right.  The challenge for FarmHack was to figure out how to conduct "Social Coding" when there is no code. While we have something that encourages participation in something akin to an Issue Queue, and submitting Forum Topics labeled "How to Build" and "How to Use" is similar to making a pull request, we can probably do better.  I'm completely open to suggestions (hit up this repository's GitHub "Issues") and I have a hunch that users are going to have some very valuable feedback.
 
 
 # Credits
 
-I (rjstatic) have handle architecture, assembly, and development so far.
+## Folks involved
+
+I (http://rjstatic.me) have handled architecture, assembly, and development so far. Severine von Tscharner Fleming of Green Horns (http://www.thegreenhorns.net/) and Dorn Cox of GreenStart (http://greenstartnh.org/) have brainstormed with me in person and we were heavily influenced by PublicLaboratory.org's Tool concept with associated Research Notes as well as Drupal.org's Issue Queues. 
+
+Also thanks to everyone who has been attending our weekly call and participating on the Farm Hack Team Atrium.
+
+Mihaela Saben of UNH
+Benjamin Shute of National Young Farmer's Coalition (http://youngfarmers.org)
+Jori Wekin of http://SmartTouring.com
+Amy Franceschini of FutureFarmers.com
+
+## Code and Art
 
 The project started out using a Make file from the Drupal Wiki project http://drupal.org/project/drupal_wiki
 
 There are a couple of icons from http://thenounproject.com/.  Credit is given on the Taxonomy terms where the images live as icons.
+
+The only custom code (by rjstatic) in the project is some helper functions that determine the current context in regards to which forum is related (changes depending on the Event or Tool page you are on).  Other than that we've done our best to stick to the core Drupal modules and Views module.  
+
+Header design by Amy Franceschini of FutureFarmers.com
