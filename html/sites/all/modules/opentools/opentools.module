@@ -74,11 +74,11 @@ function opentools_get_context($object = NULL, $object_type = NULL) {
     switch ($object->vocabulary_machine_name) {
       case "events" :
         $context["forum"] = $object->field_events_to_forum['und'][0]['tid'];
-        $context["wiki"] = $object->field_events_to_wiki['und'][0]['nid'];
+        $context["wiki"] = $object->field_event_to_wiki['und'][0]['target_id'];
         break;
       case "tools" :
         $context["forum"] = $object->field_tool_to_forum['und'][0]['tid'];
-        $context["wiki"] = $object->field_tool_to_wiki['und'][0]['tid'];
+        $context["wiki"] = $object->field_tool_to_wiki['und'][0]['target_id'];
         break;
       case "forums" :
         $parent_object = opentools_get_forum_parent($object);

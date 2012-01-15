@@ -24,7 +24,7 @@ function opentools_default_box() {
 global $user;
 
 // Get forum context
-$tid = opentools_get_context("forum");
+$tid = opentools_get_context();
 
 $query = "
 SELECT * FROM notifications_subscription 
@@ -85,7 +85,7 @@ print "</div>";
       'value' => '<?php
 
 // Get forum context
-$tid = opentools_get_context("forum");
+$tid = opentools_get_context();
 $link = "/notifications/subscribe/taxonomy_term?0=" . $tid . "&destination=forum/" . $tid;
 print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250.png\' width=\'90\'><div class=\'subscribe-text\'>Subscribe to Tool\'s Forum</div></a>";
 
@@ -114,7 +114,7 @@ print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250
 global $user;
 
 // Get forum context
-$tid = opentools_get_context("forum");
+$tid = opentools_get_context();
 
 $query = "
 SELECT * FROM notifications_subscription 

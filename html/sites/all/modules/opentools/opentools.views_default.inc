@@ -848,7 +848,7 @@ function opentools_views_default_views() {
   $handler->display->display_options['fields']['php']['empty_zero'] = 0;
   $handler->display->display_options['fields']['php']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
-  $handler->display->display_options['fields']['php']['php_output'] = '<?php print \'<a href="/node/add/forum?edit[field_forum_topic_type][und]=\' . $row->tid . \'&edit[taxonomy_forums][und]=\' . opentools_get_context("forum") . \'">\' . taxonomy_term_load($row->field_action_text)->field_action_text[\'und\'][0][\'value\'] . \'</a>\'; ?>';
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php print \'<a href="/node/add/forum?edit[field_forum_topic_type][und]=\' . $row->tid . \'&edit[taxonomy_forums][und]=\' . opentools_get_context() . \'">\' . taxonomy_term_load($row->field_action_text)->field_action_text[\'und\'][0][\'value\'] . \'</a>\'; ?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Contextual filter: Taxonomy term: Term ID */
@@ -858,9 +858,9 @@ function opentools_views_default_views() {
   $handler->display->display_options['arguments']['tid']['relationship'] = 'field_forum_section_tid';
   $handler->display->display_options['arguments']['tid']['default_action'] = 'default';
   $handler->display->display_options['arguments']['tid']['default_argument_type'] = 'php';
-  $handler->display->display_options['arguments']['tid']['default_argument_options']['code'] = '$context = opentools_get_context("forum");
+  $handler->display->display_options['arguments']['tid']['default_argument_options']['code'] = '$context = opentools_get_context();
 
-$ancestry = opentools_get_forum_context_ancestry($context);
+$ancestry = opentools_get_forum_context_ancestry($context["forum"]);
 return implode(\',\', $ancestry);';
   $handler->display->display_options['arguments']['tid']['default_argument_skip_url'] = 0;
   $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
