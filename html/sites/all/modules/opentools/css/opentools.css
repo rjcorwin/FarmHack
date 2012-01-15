@@ -44,6 +44,7 @@ body.page-taxonomy-term #block-system-main {display: none;}
 body.page-taxonomy-term .field-name-field-image {float: right;}
 body.page-taxonomy-term .feed-icon {display: none;}
 body.page-taxonomy-term #triptych-wrapper {padding-top:60px;}
+
 /*
  * Blocks on Tool pages
  */
@@ -151,7 +152,7 @@ background: #DDD;
 border: solid #292929 1px;
 }
 
-#block-views-event-wiki-block {
+#block-views-events-wiki-block {
 margin-bottom: 40px;
 }
 
