@@ -571,7 +571,6 @@ function opentools_views_default_views() {
   /* Display: Event Wiki */
   $handler = $view->new_display('block', 'Event Wiki', 'block');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Event Wiki';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Content: Link */
   $handler->display->display_options['fields']['view_node']['id'] = 'view_node';

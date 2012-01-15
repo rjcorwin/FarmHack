@@ -60,6 +60,54 @@ print "</div>";
   $box = new stdClass;
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
+  $box->delta = 'events_wiki_title';
+  $box->plugin_key = 'simple';
+  $box->title = 'Event Wiki';
+  $box->description = 'Event\'s Wiki Title';
+  $box->options = array(
+    'body' => array(
+      'value' => '<?php
+
+global $user;
+
+// Get wiki context
+$context = opentools_get_context();
+$nid = $context[\'wiki\'];
+
+$query = "
+SELECT * FROM notifications_subscription 
+INNER JOIN notifications_subscription_fields 
+WHERE notifications_subscription.uid=" . $user->uid . " 
+AND notifications_subscription_fields.value = \'" . $nid . "\';";
+
+$results = db_query($query);
+$records = array();
+foreach($results as $record) {
+  $records[] = $record;
+}
+
+if(count($records) > 0) {
+$link = "/notifications/unsubscribe/" . $records[0]->sid . "?destination=" . current_path();
+print "<div class=\'subscribe-title\'>";
+print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250-white.png\' width=\'70\'><div class=\'unsubscribe-text\'>Unsubscribe this Event\'s Wiki updates</div></a>";
+print "</div>";
+}
+else {
+$link = "/notifications/subscribe/content_thread?0=" . $nid . "&destination=" . current_path();
+print "<div class=\'subscribe-title\'>";
+print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250-white.png\' width=\'70\'><div class=\'subscribe-text\'>Subscribe to changes in this Event\'s Wiki</div></a>";
+print "</div>";
+}
+
+?>',
+      'format' => 'php_code',
+    ),
+  );
+  $export['events_wiki_title'] = $box;
+
+  $box = new stdClass;
+  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
+  $box->api_version = 1;
   $box->delta = 'license';
   $box->plugin_key = 'simple';
   $box->title = '';
@@ -76,33 +124,6 @@ print "</div>";
   $box = new stdClass;
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
-  $box->delta = 'opentools_subscribe_to_tool_foru';
-  $box->plugin_key = 'simple';
-  $box->title = '';
-  $box->description = 'Subscribe to Tool Forum';
-  $box->options = array(
-    'body' => array(
-      'value' => '<?php
-
-// Get forum context
-$tid = opentools_get_context();
-$link = "/notifications/subscribe/taxonomy_term?0=" . $tid . "&destination=forum/" . $tid;
-print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250.png\' width=\'90\'><div class=\'subscribe-text\'>Subscribe to Tool\'s Forum</div></a>";
-
-// Check user\'s subscription to this forum
-//notifications_include(\'object.inc\');
-//global $user;
-//dpm(notifications_object_user_subscriptions(\'term\', $user, $account));
-// 
-?>',
-      'format' => 'php_code',
-    ),
-  );
-  $export['opentools_subscribe_to_tool_foru'] = $box;
-
-  $box = new stdClass;
-  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
-  $box->api_version = 1;
   $box->delta = 'tools_forum_title';
   $box->plugin_key = 'simple';
   $box->title = 'Tool\'s Forum';
@@ -114,7 +135,8 @@ print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250
 global $user;
 
 // Get forum context
-$tid = opentools_get_context();
+$context = opentools_get_context();
+$tid = $context[\'forum\'];
 
 $query = "
 SELECT * FROM notifications_subscription 
