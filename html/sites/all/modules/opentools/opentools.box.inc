@@ -19,7 +19,8 @@ function opentools_default_box() {
   $box->description = 'Event\'s Forum Title';
   $box->options = array(
     'body' => array(
-      'value' => '<?php
+      'value' => '<a name="forum"></a>
+<?php
 
 global $user;
 
@@ -66,7 +67,8 @@ print "</div>";
   $box->description = 'Event\'s Wiki Title';
   $box->options = array(
     'body' => array(
-      'value' => '<?php
+      'value' => '<a name="wiki"></a>
+<?php
 
 global $user;
 
@@ -130,7 +132,8 @@ print "</div>";
   $box->description = 'Tool\'s Forum Title';
   $box->options = array(
     'body' => array(
-      'value' => '<?php
+      'value' => '<a name="forum"></a>
+<?php
 
 global $user;
 
