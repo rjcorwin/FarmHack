@@ -1,3 +1,7 @@
+/*
+ * Forum Topic Action links
+ */
+
 #block-views-forum-topic-type-actions-block .view-content {
   position: absolute;
   width: 1068px;
@@ -50,14 +54,17 @@ body.page-taxonomy-term #block-views-tool-profile-block {float: right; display: 
 /*
  * Forum Subscribe
  */ 
-#block-boxes-tools-forum-title, #block-boxes-events-forum-title {
+#block-boxes-tools-forum-title, #block-boxes-events-forum-title,
+#block-boxes-tools-wiki-title, #block-boxes-events-wiki-title {
   position: relative;
 }
-#block-boxes-tools-forum-title a:hover, #block-boxes-events-forum-title a:hover {
+#block-boxes-tools-forum-title a:hover, #block-boxes-events-forum-title a:hover,
+#block-boxes-tools-wiki-title a:hover, #block-boxes-events-wiki-title a:hover {
   background: #111;
 }
-#block-boxes-tools-forum-title a, #block-boxes-events-forum-title a  {
+#block-boxes-tools-forum-title a, #block-boxes-events-forum-title a {
 position: absolute;
+font-size: 17px;
 top: -132px;
 left: 250px;
 width: 193px;
@@ -65,9 +72,24 @@ background: #333;
 padding: 0px;
 height: 83px;
 }
+#block-boxes-tools-wiki-title a, #block-boxes-events-wiki-title a  {
+position: absolute;
+top: -25px;
+font-size: 14px;
+left: 250px;
+width: 193px;
+background: #333;
+padding: 0px;
+height: 70px;
+}
 #block-boxes-tools-forum-title img, #block-boxes-events-forum-title img {
 position: absolute;
 top: 7px;
+left: 17px;
+}
+#block-boxes-tools-wiki-title img, #block-boxes-events-wiki-title img {
+position: absolute;
+top: 0px;
 left: 17px;
 }
 #block-boxes-tools-forum-title .unsubscribe-text, #block-boxes-events-forum-title .unsubscribe-text {
@@ -79,15 +101,30 @@ font-size: 15px;
 text-align: center;
 }
 
+#block-boxes-tools-wiki-title .unsubscribe-text, #block-boxes-events-wiki-title .unsubscribe-text {
+position: absolute;
+top: 4px;
+left: 95px;
+width: 90px;
+font-size: 15px;
+text-align: center;
+}
+
 #block-boxes-tools-forum-title .subscribe-text, #block-boxes-events-forum-title .subscribe-text {
 position: absolute;
 top: 10px;
 left: 100px;
 width: 90px;
-font-size: 17px;
 text-align: center;
 }
 
+#block-boxes-tools-wiki-title .subscribe-text, #block-boxes-events-wiki-title .subscribe-text {
+position: absolute;
+top: 5px;
+left: 100px;
+width: 90px;
+text-align: center;
+}
 /*
  * Blocks on Events pages
  */
