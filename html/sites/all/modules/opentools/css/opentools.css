@@ -1,8 +1,8 @@
 #block-views-forum-topic-type-actions-block .view-content {
   position: absolute;
   width: 1068px;
-left: -50px;
-bottom: -5px;
+left: -315px;
+top: -25px;
 }
 
 #block-views-forum-topic-type-actions-block .views-row {
@@ -39,13 +39,54 @@ body.page-taxonomy-term #block-system-main {display: none;}
 */
 body.page-taxonomy-term .field-name-field-image {float: right;}
 body.page-taxonomy-term .feed-icon {display: none;}
-
+body.page-taxonomy-term #triptych-wrapper {padding-top:60px;}
 /*
  * Blocks on Tool pages
  */
 body.page-taxonomy-term #block-views-tool-wiki-block {float: left; width: 420px;}
 body.page-taxonomy-term #block-views-tool-image-block {float: right; margin-top: 0px;}
 body.page-taxonomy-term #block-views-tool-profile-block {float: right; display: none;}
+
+/*
+ * Forum Subscribe
+ */ 
+#block-boxes-tools-forum-title, #block-boxes-events-forum-title {
+  position: relative;
+}
+#block-boxes-tools-forum-title a:hover, #block-boxes-events-forum-title a:hover {
+  background: #111;
+}
+#block-boxes-tools-forum-title a, #block-boxes-events-forum-title a  {
+position: absolute;
+top: -132px;
+left: 250px;
+width: 193px;
+background: #333;
+padding: 0px;
+height: 83px;
+}
+#block-boxes-tools-forum-title img, #block-boxes-events-forum-title img {
+position: absolute;
+top: 7px;
+left: 17px;
+}
+#block-boxes-tools-forum-title .unsubscribe-text, #block-boxes-events-forum-title .unsubscribe-text {
+position: absolute;
+top: 13px;
+left: 95px;
+width: 90px;
+font-size: 15px;
+text-align: center;
+}
+
+#block-boxes-tools-forum-title .subscribe-text, #block-boxes-events-forum-title .subscribe-text {
+position: absolute;
+top: 10px;
+left: 100px;
+width: 90px;
+font-size: 17px;
+text-align: center;
+}
 
 /*
  * Blocks on Events pages
@@ -117,7 +158,7 @@ line-height: 1em !important;
 
 #block-boxes-tools-forum-title h2, #block-boxes-events-forum-title h2 {
 position: absolute;
-top: -85px;
+top: -156px;
 background: #292929;
 color: #FFF !important;
 width: 305px;

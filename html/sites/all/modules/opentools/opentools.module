@@ -1,5 +1,7 @@
 <?php
 
+include_once("opentools.features.inc");
+
 /*
  * Get the context's Forum term.
  */
@@ -12,61 +14,132 @@ function opentools_init() {
   
 }
 
+/*
+ * "context" here refers to what Forum and Wiki page are relevant to a given
+ * object.  For example, we may be currently viewing a Forum Topic node, which
+ * belongs to a Forum term, which may have an Event or Tool pointing at it, and
+ * that Tool or Event is pointing at a particular Forum term and Wiki node
+ * which is relevant and IS our context.
+ * 
+ * @return Array of Forum TID and Wiki NID relevant to the current context.
+ *  . 
+ */ 
 
-function opentools_get_forum_context($context = NULL) {
-
-  if(!$context && arg(0) == 'forum') {
-    return arg(1);
+// function opentools_get_related($type, $)
+function opentools_get_context($object = NULL, $object_type = NULL) {
+ 
+  $context = array(
+    "parent" => array(
+      "id" => NULL,
+      "type" => NULL,
+      "object" => NULL
+    ),
+    "forum" => NULL,
+    "wiki" => NULL
+  );
+  
+  // Try to figure out the current object if none was given.
+  
+  // We are in a Forum
+  if(!$object && arg(0) == 'forum' && is_numeric(arg(1))) {
+    // Too soon $context['forum'] = arg(1);
+    $object = taxonomy_term_load(arg(1));
+    $object_type = "term";
   }
-  elseif (!$context) {
-    $context = menu_get_object('taxonomy_term', 2); 
+  // We are on a taxonomy term page
+  elseif (!$object && arg(0) == 'taxonomy' && arg(1) == "term" && is_numeric(arg(2))) {
+    $object = menu_get_object('taxonomy_term', 2);
+    $object_type = "term";
+  }
+  elseif (!$object && arg(0) == 'node' && is_numeric(arg(1))) {
+    $object = node_load(arg(1));
+    $object_type = "node";
   }
 
-  // If $context is a taxonomy term
-  if (property_exists($context, "vocabulary_machine_name")) {
-    switch ($context->vocabulary_machine_name) {
+  // Try to figure the object type if we don't have it yet.
+  
+  if ($object && !$object_type) {
+    if (property_exists($object, "vocabulary_machine_name")) {
+      $object_type = "term";
+    }
+    elseif (property_exists($object, "type")) {
+      $object_type = "node";
+    }
+  }
+  
+  // Now get the $context
+  
+  // If $object is a taxonomy term
+  if ($object && $object_type == "term") {
+    switch ($object->vocabulary_machine_name) {
       case "events" :
-        $parent = $context->field_events_to_forum['und'][0]['tid'];
+        $context["forum"] = $object->field_events_to_forum['und'][0]['tid'];
+        $context["wiki"] = $object->field_events_to_wiki['und'][0]['nid'];
         break;
       case "tools" :
-        $parent = $context->field_tool_to_forum['und'][0]['tid'];
+        $context["forum"] = $object->field_tool_to_forum['und'][0]['tid'];
+        $context["wiki"] = $object->field_tool_to_wiki['und'][0]['tid'];
         break;
       case "forums" :
-        $parent = $context->tid;
+        $parent_object = opentools_get_forum_parent($object);
+        $context = opentools_get_context($parent_object);
         break;
     }
   }
-  // If $context is a node
-  elseif(property_exists($context, "type")) {
-    switch ($context->type) {
+  // If $object is a node
+  elseif($object && $object_type == "node") {
+    switch ($object->type) {
       case "wiki" :
         // Find the Event or Tool that relates to this wiki page
-        $wiki_parent = opentools_get_wiki_parent();
-        $parent = opentools_get_forum_context($wiki_parent);
+        $parent_object = opentools_get_wiki_parent($object);
+        $context = opentools_get_context($parent_object);
         break;
       case "forum_topic" :
-        $parent = $context->taxonomy_forums['und'][0]['tid'];
+        $parent_object = opentools_get_forum_parent(taxonomy_load_term($object->taxonomy_forums['und'][0]['tid']));
+        $context = opentools_get_context($parent_object);
         break;
     }
   }
   
-  return $parent;
+  return $context;
 }
 
+/*
+ * @todo
+ */
+function opentools_get_forum_parent($node) {
+  
+  // Check all Tools
+  
+  // Check all Events
+  
+  
+  return "1";
+}
+
+/*
+ * @todo
+ */
 function opentools_get_wiki_parent($node) {
+  
+  // Check all Tools
   $sql = "select from taxonomy_term as parent 
     innerjoin field_events_to_wiki on field_events_to_wiki.tid = parent.tid 
     innerjoin field_tools_to_wiki on field_tools_to_wiki.tid = parent.tid
     where field_events_to_wiki.value =" . $node->nid . " 
       OR field_tools_to_wiki.value=" . $node->nid;
+  
+  // Check all Events
+  
+  return "1";
 } 
 
 
-function opentools_get_forum_context_ancestry($context = NULL) {
+function opentools_get_forum_context_ancestry($tid = NULL) {
  
   // Get parent's ancestry
-  if (is_numeric($context)) {
-    $parents = taxonomy_get_parents($context);
+  if (is_numeric($tid)) {
+    $parents = taxonomy_get_parents($tid);
     foreach ($parents as $parent) {
       $ancestry[] = $parent->tid;
     }
