@@ -8,10 +8,30 @@ include_once("opentools.features.inc");
 
 function opentools_init() {
  // drupal_add_css(drupal_get_path('module', 'opentools') . '/css/opentools.css', array('group' => CSS_DEFAULT, 'every_page' => TRUE));
+  
   if(arg(0) != 'admin' && arg(2) != 'edit') {
     drupal_add_css(drupal_get_path('module', 'opentools') . '/css/opentools.css');
   }
+
+  // Reroute Wiki pages 
+  if(arg(0) == "node" && is_numeric(arg(1)) && arg(2) != 'edit') {
+    $node = node_load(arg(1));
+    if ($node->type == "wiki") {
+      $context = opentools_get_context($node, 'node');
+      if(is_array($context) && $parent = $context["parent"]["object"]) {
+        drupal_goto(drupal_get_path_alias("taxonomy/term/$parent->tid"), array("fragment" => "wiki"));
+      }
+    }
+  } 
   
+  // Reroute Forum pages
+  if(arg(0) == "forum" && is_numeric(arg(1)) && arg(2) != 'edit') {
+    $term = taxonomy_term_load(arg(1));
+    $context = opentools_get_context($term, 'term');
+    if(is_array($context) && $parent = $context["parent"]["object"]) {
+      drupal_goto(drupal_get_path_alias("taxonomy/term/$parent->tid"), array('fragment'=> "forum"));
+    }
+  } 
 }
 
 /*
@@ -25,7 +45,6 @@ function opentools_init() {
  *  . 
  */ 
 
-// function opentools_get_related($type, $)
 function opentools_get_context($object = NULL, $object_type = NULL) {
  
   $context = array(
@@ -76,19 +95,29 @@ function opentools_get_context($object = NULL, $object_type = NULL) {
   // Now get the $context
   
   // If $object is a taxonomy term
+  // ------ NOTE!! EVERYTHING ENDS ITS RUN HERE WITH THE OBJECT EITHER  -----
+  // ------ BEING AN EVENT OR A TOOL.                                   -----
   if ($object && $object_type == "term") {
     switch ($object->vocabulary_machine_name) {
       case "events" :
         $context["forum"] = $object->field_events_to_forum['und'][0]['tid'];
         $context["wiki"] = $object->field_event_to_wiki['und'][0]['target_id'];
+        $context["parent"]["id"] = $object->tid;
+        $context["parent"]["object"] = $object;
+        $context["parent"]["type"] = "term";
         break;
       case "tools" :
         $context["forum"] = $object->field_tool_to_forum['und'][0]['tid'];
         $context["wiki"] = $object->field_tool_to_wiki['und'][0]['target_id'];
+        $context["parent"]["id"] = $object->tid;
+        $context["parent"]["object"] = $object;
+        $context["parent"]["type"] = "term";        
         break;
       case "forums" :
         $parent_object = opentools_get_forum_parent($object);
-        $context = opentools_get_context($parent_object);
+        if ($parent_object) {
+          $context = opentools_get_context($parent_object);
+        }
         break;
     }
   }
@@ -98,7 +127,7 @@ function opentools_get_context($object = NULL, $object_type = NULL) {
       case "wiki" :
         // Find the Event or Tool that relates to this wiki page
         $parent_object = opentools_get_wiki_parent($object);
-        $context = opentools_get_context($parent_object);
+        $context = opentools_get_context($parent_object, "term");
         break;
       case "forum" :
         $parent_object = taxonomy_term_load(opentools_get_forum_parent($object->taxonomy_forums['und'][0]['tid']));
@@ -113,36 +142,62 @@ function opentools_get_context($object = NULL, $object_type = NULL) {
 /*
  * @todo
  */
-function opentools_get_forum_parent($tid) {
+function opentools_get_forum_parent($term) {
+  $tid = $term->tid; 
   // Check all Tools
-  $sql = "SELECT tid FROM taxonomy_term_data AS entity 
-  INNER JOIN field_revision_field_tool_to_forum 
-    on field_revision_field_tool_to_forum.entity_id = entity.tid
-  where field_revision_field_tool_to_forum.field_tool_to_forum_tid=" . $tid;
+  $sql = "SELECT taxonomy_term_data.name AS taxonomy_term_data_name, taxonomy_term_data.vid AS taxonomy_term_data_vid, taxonomy_term_data.tid AS tid, taxonomy_vocabulary.machine_name AS taxonomy_vocabulary_machine_name
+  FROM 
+  {taxonomy_term_data} taxonomy_term_data
+  LEFT JOIN {field_data_field_tool_to_forum} field_data_field_tool_to_forum ON taxonomy_term_data.tid = field_data_field_tool_to_forum.entity_id AND (field_data_field_tool_to_forum.entity_type = 'taxonomy_term' AND field_data_field_tool_to_forum.deleted = '0')
+  LEFT JOIN {taxonomy_vocabulary} taxonomy_vocabulary ON taxonomy_term_data.vid = taxonomy_vocabulary.vid
+  WHERE (( (field_data_field_tool_to_forum.field_tool_to_forum_tid = '$tid' ) ))";
   $results = db_query($sql);
   foreach($results as $result) {
-    return $result->tid;
+    return taxonomy_term_load($result->tid);
   }
   // Check all Events
-  
+  $sql = "SELECT taxonomy_term_data.name AS taxonomy_term_data_name, taxonomy_term_data.vid AS taxonomy_term_data_vid, taxonomy_term_data.tid AS tid, taxonomy_vocabulary.machine_name AS taxonomy_vocabulary_machine_name
+  FROM 
+  {taxonomy_term_data} taxonomy_term_data
+  LEFT JOIN {field_data_field_events_to_forum} field_data_field_events_to_forum ON taxonomy_term_data.tid = field_data_field_events_to_forum.entity_id AND (field_data_field_events_to_forum.entity_type = 'taxonomy_term' AND field_data_field_events_to_forum.deleted = '0')
+  LEFT JOIN {taxonomy_vocabulary} taxonomy_vocabulary ON taxonomy_term_data.vid = taxonomy_vocabulary.vid
+  WHERE (( (field_data_field_events_to_forum.field_events_to_forum_tid = '$tid' ) ))";
+   $results = db_query($sql);
+  foreach($results as $result) {
+    return taxonomy_term_load($result->tid);
+  }
   
 }
 
 /*
  * @todo
  */
-function opentools_get_wiki_parent($nid) {
-  
+function opentools_get_wiki_parent($node) {
+  $nid = $node->nid;
   // Check all Tools
-  $sql = "select from taxonomy_term as parent 
-    innerjoin field_events_to_wiki on field_events_to_wiki.tid = parent.tid 
-    innerjoin field_tools_to_wiki on field_tools_to_wiki.tid = parent.tid
-    where field_events_to_wiki.value =" . $node->nid . " 
-      OR field_tools_to_wiki.value=" . $node->nid;
-  
+  $sql = "SELECT taxonomy_term_data.name AS taxonomy_term_data_name, taxonomy_term_data.vid AS taxonomy_term_data_vid, taxonomy_term_data.tid AS tid, taxonomy_vocabulary.machine_name AS taxonomy_vocabulary_machine_name
+  FROM 
+  {taxonomy_term_data} taxonomy_term_data
+  LEFT JOIN {taxonomy_vocabulary} taxonomy_vocabulary ON taxonomy_term_data.vid = taxonomy_vocabulary.vid
+  LEFT JOIN {field_data_field_tool_to_wiki} field_data_field_tool_to_wiki ON taxonomy_term_data.tid = field_data_field_tool_to_wiki.entity_id AND (field_data_field_tool_to_wiki.entity_type = 'taxonomy_term' AND field_data_field_tool_to_wiki.deleted = '0')
+  WHERE (( (taxonomy_vocabulary.machine_name IN  ('tools')) AND (field_data_field_tool_to_wiki.field_tool_to_wiki_target_id = '$nid' ) ))";
+  $results = db_query($sql);
+  foreach($results as $result) {
+    return taxonomy_term_load($result->tid);
+  }
+
   // Check all Events
-  
-  return "1";
+  $sql = "SELECT taxonomy_term_data.name AS taxonomy_term_data_name, taxonomy_term_data.vid AS taxonomy_term_data_vid, taxonomy_term_data.tid AS tid, taxonomy_vocabulary.machine_name AS taxonomy_vocabulary_machine_name
+  FROM 
+  {taxonomy_term_data} taxonomy_term_data
+  LEFT JOIN {field_data_field_event_to_wiki} field_data_field_event_to_wiki ON taxonomy_term_data.tid = field_data_field_event_to_wiki.entity_id AND (field_data_field_event_to_wiki.entity_type = 'taxonomy_term' AND field_data_field_event_to_wiki.deleted = '0')
+  LEFT JOIN {taxonomy_vocabulary} taxonomy_vocabulary ON taxonomy_term_data.vid = taxonomy_vocabulary.vid
+  WHERE (( (field_data_field_event_to_wiki.field_event_to_wiki_target_id = '$nid' ) ))";
+  $results = db_query($sql);
+  foreach($results as $result) {
+    return taxonomy_term_load($result->tid);
+  }
+
 } 
 
 
