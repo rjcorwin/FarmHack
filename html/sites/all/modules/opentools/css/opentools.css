@@ -25,6 +25,44 @@ display: none !important;
 
 body #page .region-header { margin-top: 0em !important;}
 
+#name-and-slogan {display: none;}
+
+#header {
+font-size:20px !important;
+}
+
+#secondary-menu {
+  top: 207px !important;
+}
+#secondary-menu a {
+  color: #333 !important;
+}
+
+/* 
+ * Frontpage
+ */
+body.front #page-title, body.front .tabs {
+  display: none;
+}
+
+body.front #featured .block {
+  width: 300px;
+  padding: 0px;
+  margin: 0 10px;
+  float: left;
+  text-align: left;
+}
+body.front #featured .block .views-field-created {
+  color: #999;
+  font-size: 16px;
+}
+body.front #featured .block .views-field-field-blog-summary {
+  color: #333;
+  font-size: 16px;
+}
+.view-farmhack-frontpage-events thead {
+/*  display: none; */
+}
 /*
  * The ticker
  */
@@ -51,6 +89,14 @@ body.page-taxonomy-term #triptych-wrapper {padding-top:60px;}
 body.page-taxonomy-term #block-views-tool-wiki-block {float: left; width: 420px;}
 body.page-taxonomy-term #block-views-tool-image-block {float: right; margin-top: 0px;}
 body.page-taxonomy-term #block-views-tool-profile-block {float: right; display: none;}
+
+#block-views-wiki-node-images-block {
+float: right;
+clear: right;
+margin: 0px;
+width: 480px;
+text-align: center;
+}
 
 /*
  * Forum Subscribe
