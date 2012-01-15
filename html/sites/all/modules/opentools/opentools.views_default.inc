@@ -799,7 +799,6 @@ function opentools_views_default_views() {
   $handler->display->display_options['arguments']['tid']['default_action'] = 'default';
   $handler->display->display_options['arguments']['tid']['default_argument_type'] = 'php';
   $handler->display->display_options['arguments']['tid']['default_argument_options']['code'] = '$context = opentools_get_context();
-
 $ancestry = opentools_get_forum_context_ancestry($context["forum"]);
 return implode(\',\', $ancestry);';
   $handler->display->display_options['arguments']['tid']['default_argument_skip_url'] = 0;

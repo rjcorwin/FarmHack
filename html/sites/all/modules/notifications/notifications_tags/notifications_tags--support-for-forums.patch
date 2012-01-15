@@ -1,0 +1,15 @@
+diff --git a/html/sites/all/modules/notifications/notifications_tags/notifications_tags.module b/html/sites/all/modules/notifications/notifications_tags/notifications_tags.module
+index 5084cdb..ee69e56 100644
+--- a/html/sites/all/modules/notifications/notifications_tags/notifications_tags.module
++++ b/html/sites/all/modules/notifications/notifications_tags/notifications_tags.module
+@@ -156,6 +156,10 @@ function notifications_tags_notifications_subscription($op, $subscription = NULL
+       elseif (arg(0) == 'admin' && arg(1) == 'structure' && arg(2) == 'taxonomy' && arg(3) && ($vocabulary = menu_get_object('taxonomy_vocabulary_machine_name', 3))) {
+         $objects[] = notifications_object('taxonomy_vocabulary', $vocabulary);
+       }
++      elseif (arg(0) == 'forum' && is_numeric(arg(1))) {
++        $term = taxonomy_term_load(arg(1));
++        $objects[] = notifications_object('taxonomy_term', $term);
++      }
+       return $objects;
+   }
+ }

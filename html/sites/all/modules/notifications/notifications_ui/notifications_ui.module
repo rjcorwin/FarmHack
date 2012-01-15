@@ -242,7 +242,9 @@ function notifications_ui_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  */
 function notifications_ui_object_subscriptions($type, $object) {
   notifications_include('object.inc');
-  return notifications_object_user_subscriptions($type, $object, $account);
+  dpm($type);
+  dpm($object);
+return notifications_object_user_subscriptions($type, $object, $account);
 }
 
 /**

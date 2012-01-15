@@ -51,9 +51,15 @@ function opentools_get_context($object = NULL, $object_type = NULL) {
     $object = menu_get_object('taxonomy_term', 2);
     $object_type = "term";
   }
+  // We are on a node
   elseif (!$object && arg(0) == 'node' && is_numeric(arg(1))) {
     $object = node_load(arg(1));
     $object_type = "node";
+    // If we are on a Topic Node, we actually want the parent Forum term.
+    if ($object->type == "forum_topic") {
+      $object = taxonomy_term_load($object->taxonomy_forums['und'][0]['tid']);
+      $object_type = "term";
+    }
   }
 
   // Try to figure the object type if we don't have it yet.
@@ -94,8 +100,8 @@ function opentools_get_context($object = NULL, $object_type = NULL) {
         $parent_object = opentools_get_wiki_parent($object);
         $context = opentools_get_context($parent_object);
         break;
-      case "forum_topic" :
-        $parent_object = opentools_get_forum_parent(taxonomy_load_term($object->taxonomy_forums['und'][0]['tid']));
+      case "forum" :
+        $parent_object = taxonomy_term_load(opentools_get_forum_parent($object->taxonomy_forums['und'][0]['tid']));
         $context = opentools_get_context($parent_object);
         break;
     }
@@ -107,20 +113,25 @@ function opentools_get_context($object = NULL, $object_type = NULL) {
 /*
  * @todo
  */
-function opentools_get_forum_parent($node) {
-  
+function opentools_get_forum_parent($tid) {
   // Check all Tools
-  
+  $sql = "SELECT tid FROM taxonomy_term_data AS entity 
+  INNER JOIN field_revision_field_tool_to_forum 
+    on field_revision_field_tool_to_forum.entity_id = entity.tid
+  where field_revision_field_tool_to_forum.field_tool_to_forum_tid=" . $tid;
+  $results = db_query($sql);
+  foreach($results as $result) {
+    return $result->tid;
+  }
   // Check all Events
   
   
-  return "1";
 }
 
 /*
  * @todo
  */
-function opentools_get_wiki_parent($node) {
+function opentools_get_wiki_parent($nid) {
   
   // Check all Tools
   $sql = "select from taxonomy_term as parent 
@@ -136,7 +147,7 @@ function opentools_get_wiki_parent($node) {
 
 
 function opentools_get_forum_context_ancestry($tid = NULL) {
- 
+  $ancestry = array();
   // Get parent's ancestry
   if (is_numeric($tid)) {
     $parents = taxonomy_get_parents($tid);
