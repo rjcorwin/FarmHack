@@ -27,6 +27,8 @@ body #page .region-header { margin-top: 0em !important;}
 
 #name-and-slogan {display: none;}
 
+.region-help { border: none !important; }
+
 #header {
 font-size:20px !important;
 }
