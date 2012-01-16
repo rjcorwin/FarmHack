@@ -14,7 +14,7 @@ function opentools_init() {
   }
 
   // Reroute Wiki pages 
-  if(arg(0) == "node" && is_numeric(arg(1)) && arg(2) != 'edit') {
+  if(arg(0) == "node" && is_numeric(arg(1)) && arg(2) != 'edit' && arg(2) != 'revisions') {
     $node = node_load(arg(1));
     if ($node->type == "wiki") {
       $context = opentools_get_context($node, 'node');
@@ -117,7 +117,14 @@ function opentools_get_context($object = NULL, $object_type = NULL) {
         $parent_object = opentools_get_forum_parent($object);
         if ($parent_object) {
           $context = opentools_get_context($parent_object);
-        }
+        } 
+        // No parent? Then this forum is the end of the line.
+        // @todo There is a bug around here somewhere. When viewing contextual links
+        // on Forum nodes under Forum Terms that do not have parents, the results are
+        // REALLY weird.
+        else {
+          $context["forum"] = $object->tid;
+        }  
         break;
     }
   }
@@ -130,8 +137,10 @@ function opentools_get_context($object = NULL, $object_type = NULL) {
         $context = opentools_get_context($parent_object, "term");
         break;
       case "forum" :
-        $parent_object = taxonomy_term_load(opentools_get_forum_parent($object->taxonomy_forums['und'][0]['tid']));
-        $context = opentools_get_context($parent_object);
+        $parent_object = opentools_get_forum_parent(taxonomy_term_load($object->taxonomy_forums['und'][0]['tid']));
+        if($parent_object) {
+          $context = opentools_get_context($parent_object);
+        }
         break;
     }
   }
@@ -213,6 +222,5 @@ function opentools_get_forum_context_ancestry($tid = NULL) {
   else {
     $ancestry = NULL;
   }
-
   return $ancestry;
 }
