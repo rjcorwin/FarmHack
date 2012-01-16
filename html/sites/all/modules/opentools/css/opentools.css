@@ -17,12 +17,28 @@ top: -25px;
   margin-top: 66px;
 }
 
+/* 
+ * They are messed up on Topic pages. Hide them.
+ */
+body.node-type-forum #block-views-forum-topic-type-actions-block {
+  display: none;
+}
+
 /* HACKS */
 
 #breadcrumb {
-display: none !important;
+display: none;
 }
 
+.page-node #breadcrumb, .page-forum- #breadcrumb {
+display: inline;
+}
+
+#breadcrumb .breadcrumb {
+position: relative;
+left: 15px;
+top: 5px;
+}
 body #page .region-header { margin-top: 0em !important;}
 
 #name-and-slogan {display: none;}

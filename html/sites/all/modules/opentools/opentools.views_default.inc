@@ -763,9 +763,9 @@ function opentools_views_default_views() {
   $view = new view;
   $view->name = 'forum_topic_type_actions';
   $view->description = '';
-  $view->tag = 'default';
+  $view->tag = 'opentools';
   $view->base_table = 'taxonomy_term_data';
-  $view->human_name = 'forum_topic_type_actions';
+  $view->human_name = 'Action Links - Create Forum Topic Types';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -908,7 +908,10 @@ function opentools_views_default_views() {
   $handler->display->display_options['fields']['php']['empty_zero'] = 0;
   $handler->display->display_options['fields']['php']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
-  $handler->display->display_options['fields']['php']['php_output'] = '<?php print \'<a href="/node/add/forum?edit[field_forum_topic_type][und]=\' . $row->tid . \'&edit[taxonomy_forums][und]=\' . opentools_get_context() . \'">\' . taxonomy_term_load($row->field_action_text)->field_action_text[\'und\'][0][\'value\'] . \'</a>\'; ?>';
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php 
+$context = opentools_get_context();
+$tid = $context[\'forum\'];
+print \'<a href="/node/add/forum?edit[field_forum_topic_type][und]=\' . $row->tid . \'&edit[taxonomy_forums][und]=\' . $tid . \'">\' . taxonomy_term_load($row->field_action_text)->field_action_text[\'und\'][0][\'value\'] . \'</a>\'; ?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Contextual filter: Taxonomy term: Term ID */
@@ -925,6 +928,7 @@ if(is_numeric($context[\'forum\'])) {
 }
 elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $ancestry = opentools_get_forum_context_ancestry(arg(1));
+  $ancestry[] = arg(1);
   return implode(\',\', $ancestry);
 }
 

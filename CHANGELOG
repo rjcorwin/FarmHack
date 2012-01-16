@@ -22,3 +22,10 @@ Alpha7
 + fill in front page 
 + Remove recent activity block in header
 + Make header operational
+
+Beta1
++ Topic pages now have breadcrumbs which is a start to fixing them up.
++ Forward Event and Tool Forum pages to Event and Tool term pages and scroll user down to the Forum section.
++ Forward Event and Tool Wiki pages to Event and Tool term pages.
++ Remove character limit for body of Wiki on Tool and Event pages.
++ set email as the default send method
