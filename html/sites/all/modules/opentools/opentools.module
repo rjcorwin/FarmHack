@@ -34,6 +34,41 @@ function opentools_init() {
   } 
 }
 
+function opentools_taxonomy_term_insert($term){
+  if($term->vocabulary_machine_name == 'tools') {
+    // Create a wiki page
+    // Example from http://drupal.org/node/889058#comment-3709802
+    $wiki = new StdClass();
+    $wiki->title = $term->name;
+    $wiki->type = 'wiki';
+    $wiki->language = LANGUAGE_NONE;
+    node_object_prepare($wiki);
+    /*
+    $node->body[$node->language][0]['value']   = $body_text;
+    $node->body[$node->language][0]['summary'] = text_summary($body_text);
+    $node->body[$node->language][0]['format']  = 2;
+    */
+    node_save($wiki);
+    dpm($wiki);
+    // Create a forum
+    $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'forums'")->fetchField();
+    
+    $forum = (object) array(
+      'name' => $term->name,
+      'vid' => $vid,
+      'parent' => array(2)
+    );
+    taxonomy_term_save($forum);
+    dpm($forum); 
+    // Save the tool with references to the new wiki page and forum 
+    $term->field_tool_to_wiki['und'][0]['target_id'] = $wiki->nid;
+    $term->field_tool_to_forum['und'][0]['tid'] = $forum->tid;
+    
+    taxonomy_term_save($term);
+  }
+
+}
+
 /*
  * "context" here refers to what Forum and Wiki page are relevant to a given
  * object.  For example, we may be currently viewing a Forum Topic node, which
