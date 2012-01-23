@@ -69,6 +69,17 @@ function opentools_taxonomy_term_insert($term){
 
 }
 
+function opentools_form_alter(&$form, &$form_state, $form_id) {
+  // Hide unnecessary form items
+  if($form_id == "taxonomy_form_term" && $form['#vocabulary']->machine_name == 'tools') {
+   $form['field_tool_to_wiki']['#type'] = 'hidden';
+   $form['field_tool_to_forum']['#type'] = 'hidden';
+   $form['description']['#type'] = 'hidden';
+   $form['relations']['#type'] = 'hidden';
+  }
+
+}
+
 /*
  * "context" here refers to what Forum and Wiki page are relevant to a given
  * object.  For example, we may be currently viewing a Forum Topic node, which
